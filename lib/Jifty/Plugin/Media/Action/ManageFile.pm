@@ -89,7 +89,7 @@ sub take_action {
         my $fh = $self->argument_value('file');
         if ($fh) {
             my $filename = scalar($fh);
-            $filename = Jifty::Plugin::Media->clean_dir_name($filename);
+            $filename = Jifty::Plugin::Media->clean_file_name($filename);
 
             local $/;
             binmode $fh;
