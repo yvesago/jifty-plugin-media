@@ -26,7 +26,7 @@ In your jifty config.yml under the framework section:
        - Media:
           default_root: files
 
-<<default_root>> will be added to Your_app_root/share/web/static/ path 
+C<default_root> will be added to C<Your_app_root/share/web/static/> path 
 Your process need to have write rights in this directory.
 
 In your Dispatcher manage allowed uploaders :

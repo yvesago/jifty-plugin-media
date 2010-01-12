@@ -1,0 +1,57 @@
+NAME
+    Jifty::Plugin::Media - Provides upload file and select url for Jifty
+
+DESCRIPTION
+    Jifty::Plugin::Media is a Jifty plugin to allow file upload and select
+    url for any media file for your application.
+
+SYNOPSIS
+    In your model class schema description, add the following:
+
+       column color1 => is Media;
+
+    In your jifty config.yml under the framework section:
+
+       Plugins:
+           - Media:
+              default_root: files
+
+    "default_root" will be added to "Your_app_root/share/web/static/" path
+    Your process need to have write rights in this directory.
+
+    In your Dispatcher manage allowed uploaders :
+
+      use strict;
+      use warnings;
+      package TestApp::Dispatcher;
+      use Jifty::Dispatcher -base;
+      before '*' => run {
+        Jifty->api->allow('Jifty::Plugin::Media::Action::ManageFile')
+            if Jifty->web-current_user->is_supersuser;
+        };
+      1;
+
+  init
+    load config values, javascript and css
+
+  read_dir
+  conv2ascii
+     convert accent character to ascii
+
+  clean_dir_name
+    convert dir name in ascii
+
+  clean_file_name
+    convert file name in ascii
+
+AUTHOR
+    Yves Agostini, <yvesago@cpan.org>
+
+LICENSE
+    Copyright 2010, Yves Agostini.
+
+    This program is free software and may be modified and distributed under
+    the same terms as Perl itself.
+
+    Embeded
+
