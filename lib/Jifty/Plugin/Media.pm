@@ -11,25 +11,25 @@ Jifty::Plugin::Media - Provides upload file and select url for Jifty
 
 =head1 DESCRIPTION
 
-Jifty::Plugin::Media is a Jifty plugin to allow file upload and select url for
-any media file for your application.
+Jifty::Plugin::Media is a Jifty plugin to allow managing static files, upload 
+create directory, delete and select url for any media file for your application.
 
 =head1 SYNOPSIS
 
-In your model class schema description, add the following:
+In your B<Model> class schema description, add the following:
 
    column color1 => is Media;
 
-In your jifty config.yml under the framework section:
+In your jifty B<config.yml> under the framework section:
 
    Plugins:
        - Media:
           default_root: files
 
 C<default_root> will be added to C<Your_app_root/share/web/static/> path 
-Your process need to have write rights in this directory.
+Your web process need to have write rights in this directory.
 
-In your Dispatcher manage allowed uploaders :
+In your B<Dispatcher> manage allowed uploaders :
 
   use strict;
   use warnings;
@@ -39,7 +39,26 @@ In your Dispatcher manage allowed uploaders :
     Jifty->api->allow('Jifty::Plugin::Media::Action::ManageFile')
         if Jifty->web-current_user->is_supersuser;
     };
+  before '/media_*' => run {
+    tangent '/access_denied'
+        if ( ! Jifty->web-current_user->is_superuser );
+  };
   1;
+
+In your B<View> you can access to a manager page C<'/media_manage_page'> or
+a fragment C<'/media_manage'> usable in a popout link:
+
+  hyperlink (label => 'Manage files',
+               onclick => { popout => '/media_manage' });
+
+you can open a repository on load with C<mediadir> argument
+
+   hyperlink (label => 'Manage files',
+                 onclick => { 
+                     popout => '/media_manage', 
+                     args => { mediadir => '/images/'} 
+                     });
+
 
 =cut
 
@@ -147,9 +166,10 @@ convert dir name in ascii
 sub clean_dir_name {
     my $self = shift;
     my $string = shift;
+    return if !$string;
     $string=~s/[ '"\.\/\\()%&~{}|`,;:!*\$]/-/g;
-    $string=~s/--/-/g;
     $string=~s/#/Sharp/g;
+    $string=~s/--/-/g; $string=~s/--/-/g; $string=~s/--/-/g;
     $string=$self->conv2ascii($string);
     return $string;
 };
@@ -164,9 +184,12 @@ convert file name in ascii
 sub clean_file_name {
     my $self = shift;
     my $name = shift;
-    my ($string,$ext) = $name =~m/^(.*?)\.(\w+)$/;
-    $string=$self->clean_dir_name($string);
-    return $string.'.'.$ext;
+    my $string=''; my $ext='';
+    ($string,$ext) = $name =~m/^(.*?)(\.\w+)?$/;
+    $ext =~ s/^\.// if $ext;
+    $string = $self->clean_dir_name($string);
+    $ext = $self->clean_dir_name($ext);
+    return ($ext)?$string.'.'.$ext:$string;
 };
 
 
@@ -178,9 +201,14 @@ Yves Agostini, <yvesago@cpan.org>
 
 Copyright 2010, Yves Agostini.
 
-This program is free software and may be modified and distributed under the same terms as Perl itself.
+This program is free software and may be modified and distributed under the same
+terms as Perl itself.
 
-Embeded 
+Embeded C<jqueryFileTree.js> is based on B<jQuery File Tree>
+from http://abeautifulsite.net/2008/03/jquery-file-tree/  
+
+Which is dual-licensed under the GNU General Public License and the MIT License
+and is copyright 2008 A Beautiful Site, LLC. 
 
 =cut
 

@@ -17,7 +17,7 @@ template 'form' => sub {
 
    hyperlink (label => 'Manage files',
                 onclick => {
-                popout => '/media_manage' });
+                popout => '/media_manage', args => { mediadir => '/images/'} });
 };
 
 
