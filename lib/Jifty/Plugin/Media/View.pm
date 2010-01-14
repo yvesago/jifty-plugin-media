@@ -131,8 +131,16 @@ template 'media_manage' => sub {
             my $ext = $1 || '';
             if ( $ext eq 'png' || $ext eq 'gif' || $ext eq 'jpg' ) {
                 div { class is 'preview';
-                    img { attr { src => $view }; };
+                    my ($sname,$size,$date) = Jifty::Plugin::Media->file_info($view);
                     outs( _(' preview for ') ); outs $view;
+                    br {};
+                    img { attr { src => $view }; };
+                    div { class is 'info';
+                        br {};
+                        outs $sname.' : '.$size;
+                        br {}; outs $date;
+                        br {}; br {};
+                    };
                 };
             }
             else {

@@ -22,6 +22,7 @@
 	font-size: 11px;
 	padding: 0px;
 	margin: 0px;
+    background: #ddd;
 }
 
 .media-manage .preview a {
@@ -32,8 +33,11 @@
 }
 
 .media-manage .preview img {
+    float: left;
     height: 50px;
     width: 50px;
+    padding-left: 0.5em;
+    padding-right: 2em;
 }
 
 .media-manage .add-folder {

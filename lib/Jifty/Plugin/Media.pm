@@ -144,6 +144,53 @@ sub read_dir {
     return ({ Folders => \@folders, Files => \@files });
 };
 
+sub _get_filesize_str
+{
+    my $size = shift;
+
+    if ($size > 1099511627776)  #   TiB: 1024 GiB
+    {
+        return sprintf("%.2f T", $size / 1099511627776);
+    }
+    elsif ($size > 1073741824)  #   GiB: 1024 MiB
+    {
+        return sprintf("%.2f G", $size / 1073741824);
+    }
+    elsif ($size > 1048576)     #   MiB: 1024 KiB
+    {
+        return sprintf("%.2f M", $size / 1048576);
+    }
+    elsif ($size > 1024)        #   KiB: 1024 B
+    {
+        return sprintf("%.2f K", $size / 1024);
+    }
+    else                        #   bytes
+    {
+        return sprintf("%.2f", $size);
+    }
+};
+
+
+=head2 file_info
+
+=cut
+
+sub file_info {
+    my $self = shift;
+    my $file = shift;
+
+    my $root = Jifty::Util->app_root().'/share/web';
+    my $fullName = $root . $file;
+    return if (! -e $fullName);
+
+    my $size = _get_filesize_str((stat($fullName))[7]);
+    DateTime->DefaultLocale(Jifty::I18N->get_current_language);
+    my $dt = Jifty::DateTime->from_epoch(time_zone => 'local',epoch => (stat($fullName))[9]);
+    my $date = $dt->strftime("%a %d %b %H:%M:%S");
+    my $sname = File::Basename::basename($fullName);
+    return ($sname,$size,$date);
+};
+
 =head2 conv2ascii
 
  convert accent character to ascii
