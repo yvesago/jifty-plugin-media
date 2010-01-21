@@ -52,11 +52,16 @@ template 'media_manage_dir' => sub {
     my $self = shift;
     
     my $dir = get('mediadir') || '';
+    my $rootdir = get('rootdir') || '/';
 
-    $dir =~ s/\.\.//g;
-    $dir =~ s/^\.//;
+    $dir =~ s/\.\.//g; $dir =~ s/^\.//;
     $dir .= '/' if $dir !~ m/\/$/;
     $dir = '/'.$dir if $dir !~ m/^\//;
+
+    $rootdir =~ s/\.\.//g; $rootdir =~ s/^\.//;
+    $rootdir .= '/' if $rootdir !~ m/\/$/;
+    $rootdir = '/'.$rootdir if $rootdir !~ m/^\//;
+
 
 outs_raw <<"EOF";
 <div id="folder"></div>
@@ -64,7 +69,7 @@ outs_raw <<"EOF";
 <script language="javascript">
 jQuery(document).ready( function() {
     jQuery('#folder').fileTree ({ 
-        root: '/',
+        root: '$rootdir',
         open: '$dir',
         script: '/media_browse',
         expandSpeed: 300,
@@ -90,6 +95,13 @@ template 'media_manage' => sub {
     $dir =~ s/^\.//;
     $dir .= '/' if $dir !~ m/\/$/;
     $dir = '/'.$dir if $dir !~ m/^\//;
+
+    my $rootdir = get('rootdir') || '/';
+    $rootdir =~ s/\.\.//g; $rootdir =~ s/^\.//;
+    $rootdir .= '/' if $rootdir !~ m/\/$/;
+    $rootdir = '/'.$rootdir if $rootdir !~ m/^\//;
+
+    $dir = $rootdir if($dir eq '/' && $rootdir);
 
   div { class is 'media-manage';
     h2 { _('Manage media') };
@@ -121,7 +133,7 @@ template 'media_manage' => sub {
             onclick => [
             {  confirm => _('Really delete?'),  submit => { action => $upload, arguments => { action => 'delete' } } },
             { refresh => 'fmediadir', }, 
-            { args => { mediadir => { result_of => $upload, name => 'dir' } } },
+            { args => { mediadir => { result_of => $upload, name => 'dir' }, rootdir => $rootdir } },
             ]);
     
         my $view = get('viewfile') || '';
@@ -152,7 +164,7 @@ template 'media_manage' => sub {
         $upload->button (label => _('Create dir'), class => 'add-folder',
             onclick => [
             { submit => { action => $upload, arguments => { action => 'create_dir' } } },
-            { args => { mediadir => { result_of => $upload, name => 'dir' } } },
+            { args => { mediadir => { result_of => $upload, name => 'dir' }, rootdir => $rootdir } },
             { refresh => 'fmediadir', }
             ]);
 
@@ -161,7 +173,7 @@ template 'media_manage' => sub {
             onclick => [
             { submit => { action => $upload, arguments => { action => 'upload' } } },
             { refresh => 'fmediadir', }, 
-            { args => { mediadir => { result_of => $upload, name => 'dir' } } },
+            { args => { mediadir => { result_of => $upload, name => 'dir' }, rootdir => $rootdir } },
             ]);
     };
   };

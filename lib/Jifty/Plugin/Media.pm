@@ -54,11 +54,18 @@ a fragment C<'/media_manage'> usable in a popout link:
 you can open a repository on load with C<mediadir> argument
 
    hyperlink (label => 'Manage files',
-                 onclick => { 
-                     popout => '/media_manage', 
-                     args => { mediadir => '/images/'} 
+                 onclick => {
+                     popout => '/media_manage',
+                     args => { mediadir => '/images/'}
                      });
 
+or you can change default_root to a sub directory with C<rootdir> argument
+
+   hyperlink (label => 'Manage files',
+                 onclick => {
+                     popout => '/media_manage',
+                     args => { rootdir => '/images/'}
+                     });
 
 =cut
 
