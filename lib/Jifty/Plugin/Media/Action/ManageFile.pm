@@ -93,10 +93,12 @@ sub take_action {
 
             local $/;
             binmode $fh;
-            open FILE, '>', $destdir.$filename;
-            $self->result->error($!) if $!;
-            print FILE <$fh>;
-            close FILE ;
+            if (open FILE, '>', $destdir.$filename) {
+                print FILE <$fh>; close FILE ;
+            }
+            else {
+                $self->result->error($!);
+            };
         };
     };
 
