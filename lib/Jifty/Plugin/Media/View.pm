@@ -33,6 +33,7 @@ template 'media_browse' => sub {
     # print Files
     foreach my $file (sort @files) {
         $file =~ /\.(.+)$/;
+        next if $file =~ /^\./; #don't show hidden files
         my $ext = $1 || '';
         outs_raw '<li class="file ext_' . $ext . '"><a href="#" rel="' . 
             &HTML::Entities::encode($dir . $file) . '">' .
