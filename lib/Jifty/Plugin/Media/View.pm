@@ -141,22 +141,22 @@ template 'media_manage' => sub {
             return if $view !~ /^\//;
             $view =~ /\.(\w+)$/;
             my $ext = $1 || '';
-            if ( $ext eq 'png' || $ext eq 'gif' || $ext eq 'jpg' ) {
-                div { class is 'preview';
-                    my ($sname,$size,$date) = Jifty::Plugin::Media->file_info($view);
-                    outs( _(' preview for ') ); outs $view;
-                    br {};
+            div { class is 'preview';
+                my ($sname,$size,$date) = Jifty::Plugin::Media->file_info($view);
+                outs( _(' preview for ') ); outs $view;
+                br {};
+                if ( $ext eq 'png' || $ext eq 'gif' || $ext eq 'jpg' ) {
                     img { attr { src => $view }; };
-                    div { class is 'info';
-                        br {};
-                        outs $sname.' : '.$size;
-                        br {}; outs $date;
-                        br {}; br {};
-                    };
+                }
+                else {
+                    hyperlink( label => _('Download file'), class => 'preview', url => $view);
                 };
-            }
-            else {
-                hyperlink( label => _('Download file'), class => 'preview', url => $view);
+                div { class is 'info';
+                    br {};
+                    outs $sname.' : '.$size;
+                    br {}; outs $date;
+                    br {}; br {};
+                };
             };
         };
 
