@@ -6,8 +6,6 @@
 }
 
 .media-manage .view {
-    margin: 0;
-    padding: 0;
     border: 0;
     width: 16px;
     height: 16px;
@@ -41,8 +39,6 @@
 }
 
 .media-manage .add-folder {
-    margin: 0;
-    padding: 0;
     border: 0;
     width: 16px;
     height: 16px;

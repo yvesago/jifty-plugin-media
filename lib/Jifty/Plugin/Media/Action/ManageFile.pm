@@ -107,6 +107,7 @@ sub take_action {
         my $redirect = '/static/'.$plugin->default_root().$url;
         $self->result->content( viewfile => $redirect )
             if  (-f $root.'/'.$selected );
+        return 1;
     };
     
 

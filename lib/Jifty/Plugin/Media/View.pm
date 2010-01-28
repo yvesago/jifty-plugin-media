@@ -104,6 +104,8 @@ template 'media_manage' => sub {
 
     $dir = $rootdir if($dir eq '/' && $rootdir);
 
+  my ($plugin) = Jifty->find_plugin('Jifty::Plugin::Media');
+
   div { class is 'media-manage';
     h2 { _('Manage media') };
     
@@ -115,7 +117,7 @@ template 'media_manage' => sub {
         my $selected_name = $upload->form_field('selected')->id() ;
         div { attr { class => "form_field argument-selected"};
             label { attr { class => "label text argument-selected", for => "static-selected-id" };
-                outs '/static';
+                outs '/static/'.$plugin->default_root;
             };
         outs_raw('<input name="'.$selected_name.'" id="static-selected-id" value="'.$dir.'" class="widget argument-selected" READONLY>');
         span { attr { class => "hints text argument-selected"}; outs _('Current selected url'); };
@@ -124,6 +126,7 @@ template 'media_manage' => sub {
             #span { attr { style =>"display: none;"; class => "$i text argument-selected"; id => $i.'-'.$selected_name}; outs ' ';};
         };
         };
+        div { class is 'submit_button';
         $upload->button (label => _('View'), class => 'view',
             onclick => [
             { submit => { action => $upload, arguments => { action => 'view' } } },
@@ -136,7 +139,7 @@ template 'media_manage' => sub {
             { refresh => 'fmediadir', }, 
             { args => { mediadir => { result_of => $upload, name => 'dir' }, rootdir => $rootdir } },
             ]);
-    
+        };
         my $view = get('viewfile') || '';
         if ($view) {
             return if $view !~ /^\//;
@@ -162,20 +165,24 @@ template 'media_manage' => sub {
         };
 
         render_param($upload,'create_dir');
+        div { class is 'submit_button';
         $upload->button (label => _('Create dir'), class => 'add-folder',
             onclick => [
             { submit => { action => $upload, arguments => { action => 'create_dir' } } },
             { args => { mediadir => { result_of => $upload, name => 'dir' }, rootdir => $rootdir } },
             { refresh => 'fmediadir', }
             ]);
+        };
 
         render_param($upload,'file');
+        div { class is 'submit_button';
         hyperlink (label => _('Upload'), class => 'upload',
             onclick => [
             { submit => { action => $upload, arguments => { action => 'upload' } } },
             { refresh => 'fmediadir', }, 
             { args => { mediadir => { result_of => $upload, name => 'dir' }, rootdir => $rootdir } },
             ]);
+        };
     };
   };
 
