@@ -5,6 +5,8 @@ use utf8;
 package Jifty::Plugin::Media;
 use base qw/Jifty::Plugin Class::Accessor::Fast/;
 
+our $VERSION = '0.01';
+
 =head1 NAME
 
 Jifty::Plugin::Media - Provides upload file and select url for Jifty
