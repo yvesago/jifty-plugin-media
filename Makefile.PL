@@ -6,7 +6,7 @@ requires('File::Path');
 requires('File::Basename');
 requires('Text::Unaccent');
 
-resources repository => 'git@github.com:yvesago/jifty-plugin-media.git';
+resources 'git://github.com/yvesago/jifty-plugin-media.git';
 
 install_share;
 
